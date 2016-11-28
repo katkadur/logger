@@ -1,76 +1,20 @@
 #include <iostream>
-#include <fstream>
-#include <vector>
-#include <map>
-#include <ctime>
-
-class Logger{
-private:
-    std::ofstream logFile;
-    std::vector<std::string> columnNames;
-    std::map<std::string, std::string> columnValues;
-public:
- /*   Logger(){
-//        myfile.open("peter.csv");
-    }*/
-
-    void printTime(){
-        time_t ctt = time(0);
-        char cstr[128];
-        std::strftime (cstr, sizeof(cstr), "%c", std::localtime(&ctt));
-        logFile << cstr;
-    }
-
-    void openFile(const char* fileName){
-        logFile.open(fileName);
-        logFile << "Time Stamp";
-        std::vector<std::string>::iterator v = columnNames.begin();
-        while (v != columnNames.end()){
-            logFile << "," << *v;
-            v++;
-        }
-        logFile << std::endl;
-    }
-
-
-    void initColumn(std::string currentColumnName){
-        columnNames.push_back (currentColumnName);
-    }
-
-    void setValue(std::string columnName, std::string columnInput){
-    //need to make sure that the user input matches up twice
-        columnValues[columnName] = columnInput;
-    }
-
-    void flush(){
-        printTime();
-        std::vector<std::string>::iterator v = columnNames.begin();
-        while (v != columnNames.end()){
-            logFile << "," << columnValues[*v];
-            v++;
-        }
-        logFile << std::endl;
-        columnValues.clear();
-    }
-
-    void close(){
-        logFile.close();
-    }
-};
+#include "Logger.h"
 
 int main(){
-//    Logger logger = Logger();
-
-
-    Logger logger;
-    logger.initColumn("motor");
-    logger.initColumn("motor2");
-    logger.openFile("skusamm.csv");
-    logger.setValue("motor", "78");
-    logger.setValue("motor2", "90");
-    logger.flush();
-    logger.setValue("motor2", "621");
-    logger.flush();
-    logger.close();
-
+    Logger loggerNew;
+    loggerNew.initColumns({"flywheel 1", "flywheel 2", "normal wheel"});
+    loggerNew.initFile("loggerTest.csv");
+    loggerNew.setValue("flywheel 1", 3.1415);
+    loggerNew.setValue("flywheel 2", 0);
+    loggerNew.flush();
+    loggerNew.setValue("normal wheel", "space above me");
+    loggerNew.flush();
+    loggerNew.setValue("flywheel 1", "katareina");
+    loggerNew.flush();
+    loggerNew.setValue("normal wheel", 798);
+    loggerNew.flush();
+    loggerNew.setValue("normal wheel", 525600);
+    loggerNew.flush();
+    loggerNew.close();
 }
